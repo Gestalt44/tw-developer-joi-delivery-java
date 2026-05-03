@@ -1,4 +1,7 @@
 spring:
+  h2:
+    console:
+      enabled: true
   application:
     name: delivery
   datasource:
@@ -10,3 +13,6 @@ spring:
     database-platform: org.hibernate.dialect.H2Dialect
     hibernate:
       ddl-auto: create
+logging:
+    level:
+      org.springframework.web: DEBUG

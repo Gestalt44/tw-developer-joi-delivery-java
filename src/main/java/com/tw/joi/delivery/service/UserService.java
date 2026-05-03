@@ -1,20 +1,20 @@
 package com.tw.joi.delivery.service;
 
+import com.tw.joi.delivery.exception.JoiNotFoundException;
 import com.tw.joi.delivery.domain.User;
-import com.tw.joi.delivery.seedData.SeedData;
-import java.util.List;
+import com.tw.joi.delivery.seedData.InMemoryDataStore;
+
+import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@AllArgsConstructor
 public class UserService {
 
-    private final List<User> users= SeedData.users;
+    InMemoryDataStore datarepo;
 
     public User fetchUserById(String userId) {
-        return users.stream()
-            .filter(user -> userId.equals(user.getUserId()))
-            .findFirst()
-            .orElse(null);
+        return datarepo.findUserById(userId).orElseThrow(() -> new JoiNotFoundException("User"));
     }
 
 }
