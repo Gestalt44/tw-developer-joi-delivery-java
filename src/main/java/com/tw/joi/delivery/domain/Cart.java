@@ -1,9 +1,11 @@
 package com.tw.joi.delivery.domain;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -20,10 +22,12 @@ public class Cart {
 
     private String cartId;
     private Outlet outlet;
-
     @Builder.Default
     private List<Product> products = new ArrayList<>();
 
     private User user;
 
+    public BigDecimal getCartTotal() {
+        return products.stream().map(p -> ((GroceryProduct) p).getSellingPrice()).reduce(BigDecimal::add).orElse(BigDecimal.ZERO);
+    }
 }

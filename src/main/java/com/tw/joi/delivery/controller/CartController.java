@@ -2,16 +2,13 @@ package com.tw.joi.delivery.controller;
 
 import com.tw.joi.delivery.domain.Cart;
 import com.tw.joi.delivery.dto.request.AddProductRequest;
+import com.tw.joi.delivery.dto.request.DeleteProductRequest;
 import com.tw.joi.delivery.dto.response.CartProductInfo;
+import com.tw.joi.delivery.dto.response.DeleteProductResponse;
 import com.tw.joi.delivery.service.CartService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/cart")
@@ -29,4 +26,10 @@ public class CartController {
     public ResponseEntity<Cart> viewCart(@RequestParam(name = "userId") String userId) {
         return ResponseEntity.ok(cartService.getCartForUser(userId));
     }
+
+    @DeleteMapping("/delete/")
+    public ResponseEntity<DeleteProductResponse> deleteProductFromCart(@RequestBody DeleteProductRequest request) {
+        return ResponseEntity.ok(cartService.deleteProductFromCart(request));
+    }
+
 }

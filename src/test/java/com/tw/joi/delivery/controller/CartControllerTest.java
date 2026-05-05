@@ -1,12 +1,15 @@
 package com.tw.joi.delivery.controller;
 
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.ObjectWriter;
 import com.tw.joi.delivery.domain.Cart;
 import com.tw.joi.delivery.dto.request.AddProductRequest;
+import com.tw.joi.delivery.exception.InvalidProductForStoreState;
 import com.tw.joi.delivery.service.CartService;
 import org.hamcrest.core.Is;
 import org.junit.jupiter.api.Test;
@@ -39,26 +42,47 @@ public class CartControllerTest {
         addProductRequest.setOutletId("store101");
 
         ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
-        String requestJson=ow.writeValueAsString(addProductRequest );
+        String requestJson = ow.writeValueAsString(addProductRequest);
 
         mockMvc.perform(MockMvcRequestBuilders.post(url)
-                            .content(requestJson)
-                            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk());
+                        .content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
     }
 
     @Test
     void shouldReturnTheCart() throws Exception {
         String url = "/cart/view?userId={userId}";
-        String userId="user101";
-        Cart cart= Cart.builder()
-            .cartId("cart101")
-            .build();
+        String userId = "user101";
+        Cart cart = Cart.builder()
+                .cartId("cart101")
+                .build();
         when(cartService.getCartForUser(userId)).thenReturn(cart);
 
-        mockMvc.perform(MockMvcRequestBuilders.get(url,"user101")
-                            .contentType(MediaType.APPLICATION_JSON))
-            .andExpect(status().isOk())
-            .andExpect(MockMvcResultMatchers.jsonPath("$.cartId", Is.is("cart101")));
+        mockMvc.perform(MockMvcRequestBuilders.get(url, "user101")
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.cartId", Is.is("cart101")));
     }
+
+    @Test
+    void shouldThrowExceptionForNonCartStoreProduct() throws Exception {
+        //Arrange
+        String url = "/cart/product";
+        AddProductRequest addProductRequest = new AddProductRequest();
+        addProductRequest.setProductId("product101");
+        addProductRequest.setUserId("user101");
+        addProductRequest.setOutletId("store101");
+
+        ObjectWriter ow = mapper.writer().withDefaultPrettyPrinter();
+        String requestJson = ow.writeValueAsString(addProductRequest);
+
+        when(cartService.addProductToCartForUser(any(AddProductRequest.class))).thenThrow(new InvalidProductForStoreState("product101", "store102", "Store101"));
+
+        mockMvc.perform(MockMvcRequestBuilders.post(url)
+                        .content(requestJson)
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isBadRequest());
+    }
+    
 }
