@@ -5,28 +5,27 @@ import com.tw.joi.delivery.dto.request.AddProductRequest;
 import com.tw.joi.delivery.dto.response.CartProductInfo;
 import com.tw.joi.delivery.service.CartService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/cart")
+@RequestMapping("/carts") // Plural resource
 @RequiredArgsConstructor
 public class CartController {
 
     private final CartService cartService;
 
-    @PostMapping("/product")
-    public ResponseEntity<CartProductInfo> addProductToCart(@RequestBody AddProductRequest addProductRequest) {
-        return ResponseEntity.ok(cartService.addProductToCartForUser(addProductRequest));
+    // POST /carts/items
+    @PostMapping("/items")
+    public ResponseEntity<CartProductInfo> addItem(@RequestBody AddProductRequest request) {
+        // Returning 201 Created is the standard for adding/creating items
+        return ResponseEntity.status(HttpStatus.CREATED).body(cartService.addItemToCart(request));
     }
 
-    @GetMapping("/view")
-    public ResponseEntity<Cart> viewCart(@RequestParam(name = "userId") String userId) {
-        return ResponseEntity.ok(cartService.getCartForUser(userId));
+    // GET /carts?userId=123
+    @GetMapping
+    public ResponseEntity<Cart> getCartByUserId(@RequestParam String userId) {
+        return ResponseEntity.ok(cartService.findActiveCartByUserId(userId));
     }
 }

@@ -3,20 +3,22 @@ package com.tw.joi.delivery.domain;
 import jakarta.persistence.*;
 import lombok.*;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "cart")
-public class Cart {
+@Table(name = "orders")
+public class Order {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long cartId;
+    private Long orderId;
 
     @ManyToOne
     @JoinColumn(name = "user_id")
@@ -26,9 +28,11 @@ public class Cart {
     @JoinColumn(name = "outlet_id")
     private Outlet outlet;
 
-    @Enumerated(EnumType.STRING)
-    private CartStatus status;
+    private Double totalAmount;
 
-    @OneToMany(mappedBy = "cart", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<CartItem> items;
+    private LocalDateTime createdAt;
+
+    @OneToMany(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
+    @Builder.Default
+    private List<OrderItem> items = new ArrayList<>();
 }

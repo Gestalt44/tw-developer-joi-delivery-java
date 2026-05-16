@@ -7,8 +7,8 @@ import lombok.Setter;
 @Setter
 public class AddProductRequest {
 
-    private String userId;
-    private String outletId;
-    private String productId;
+  private Long userId;
+  private Long outletId;
+  private Long productId;
 
 }

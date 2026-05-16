@@ -1,12 +1,24 @@
 spring:
   application:
     name: delivery
+  sql:
+    init:
+      mode: always
+
   datasource:
-    url: jdbc:h2:mem:joidelivery
+    url: jdbc:h2:file:./data/mydb;DB_CLOSE_DELAY=-1
     username: sa
-    password: password
-    driverClassName: org.h2.Driver
+    password:
+    driver-class-name: org.h2.Driver
+
   jpa:
     database-platform: org.hibernate.dialect.H2Dialect
+    show-sql: true
+
     hibernate:
       ddl-auto: create
+
+    defer-datasource-initialization: true
+  h2:
+    console:
+      enabled: true

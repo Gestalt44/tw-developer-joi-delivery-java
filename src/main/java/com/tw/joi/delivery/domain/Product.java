@@ -1,19 +1,20 @@
 package com.tw.joi.delivery.domain;
 
-import java.math.BigDecimal;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public abstract class Product {
+@Entity
+public class Product {
 
-    protected String productId;
-    protected String productName;
-    protected BigDecimal mrp;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long productId;
 
+    private String name;
+
+    private Double basePrice;
 }
