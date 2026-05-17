@@ -1,10 +1,9 @@
 package com.tw.joi.delivery.service;
 
 import com.tw.joi.delivery.domain.OutletInventory;
-import com.tw.joi.delivery.domain.Product;
 import com.tw.joi.delivery.dto.response.ProductResponse;
 import com.tw.joi.delivery.exception.JoiNotFoundException;
-import com.tw.joi.delivery.repository.OutletIRepository;
+import com.tw.joi.delivery.repository.OutletRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +13,7 @@ import java.util.List;
 @AllArgsConstructor
 public class ProductService {
 
-  private OutletIRepository outletRepository;
+  private OutletRepository outletRepository;
 
   public List<ProductResponse> findProducts(long storeId) {
     //

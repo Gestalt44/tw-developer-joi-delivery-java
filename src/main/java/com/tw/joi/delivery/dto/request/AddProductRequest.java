@@ -10,5 +10,5 @@ public class AddProductRequest {
   private Long userId;
   private Long outletId;
   private Long productId;
-
+  private Integer quantity;
 }
